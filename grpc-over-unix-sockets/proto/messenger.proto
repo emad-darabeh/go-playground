@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package messenger;
+
+option go_package = "grpc-over-unix-sockets/proto";
+
+service LinkService {
+  rpc Send(Message) returns (Ack);
+}
+
+message Message {
+  string id      = 1;
+  string command = 2;
+  bytes  payload = 3;
+}
+
+message Ack {
+  string status = 1;
+}

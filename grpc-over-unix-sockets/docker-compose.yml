@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  node-a:
+    build:
+      context: .
+      dockerfile: node/Dockerfile
+    environment:
+      MY_SOCKET: /var/run/app/a.sock
+      PEER_SOCKET: /var/run/app/b.sock
+    volumes:
+      - uds-socket:/var/run/app
+    restart: unless-stopped
+
+  node-b:
+    build:
+      context: .
+      dockerfile: node/Dockerfile
+    environment:
+      MY_SOCKET: /var/run/app/b.sock
+      PEER_SOCKET: /var/run/app/a.sock
+    volumes:
+      - uds-socket:/var/run/app
+    restart: unless-stopped
+
+volumes:
+  uds-socket:
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
